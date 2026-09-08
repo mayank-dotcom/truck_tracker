@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: "FoxFreight — Live Truck Tracker",
   description:
     "Real-time GPS truck tracking system for FoxFreight logistics operations. Monitor deliveries, route progress, and fleet status.",
+  icons: {
+    icon: "/image.png",
+    shortcut: "/image.png",
+    apple: "/image.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
