@@ -1,26 +1,3621 @@
+@import url('https://fonts.googleapis.com/css2?family=Molle:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:ital,wght@1,500;1,600&display=swap');
 @import "tailwindcss";
 
+.molle-regular-italic {
+  font-family: "Molle", cursive;
+  font-weight: 400;
+  font-style: italic;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Cockpit Theme Tokens */
+  --cockpit-bg: #cbd2dc;
+  --app-bg: #ffffff;
+  --card-bg: #ffffff;
+  --border-light: #eef0f3;
+  --border-subtle: #e2e5ea;
+  --border-dark: #22262e;
+
+  /* Accent Colors */
+  --lime-accent: #faff02;
+  --lime-hover: #e8ec02;
+  --lime-translucent: rgba(250, 255, 2, 0.94);
+  --lime-highlight: #fdffe5;
+
+  /* Text Colors */
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --text-light: #6b7280;
+
+  /* Status Colors */
+  --blue-primary: #2563eb;
+  --blue-dark: #1d4ed8;
+  --orange-congestion: #ea580c;
+  --green-active: #16a34a;
+  --teal-accent: #0d9488;
+  --yellow-accent: #eab308;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+*::-webkit-scrollbar,
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  background-color: var(--app-bg);
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   OUTER VIEWPORT & FULL PAGE APP FRAME (Edge-to-Edge Full Screen)
+   ========================================================================== */
+
+.cockpit-viewport {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
+  display: flex;
+  background: #ffffff;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.cockpit-app-frame {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
+  background: var(--app-bg);
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: none;
+}
+
+/* ==========================================================================
+   TOP NAVIGATION BAR
+   ========================================================================== */
+
+.cockpit-header {
+  height: 52px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-light);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  z-index: 20;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cockpit-logo-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--blue-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+}
+
+.logo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.header-icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.header-icon-btn:hover {
+  background: #f3f4f6;
+  color: var(--text-primary);
+}
+
+.header-divider {
+  color: #d1d5db;
+  font-size: 14px;
+  margin: 0 2px;
+}
+
+.scenario-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f4f5f7;
+  padding: 5px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 11.5px;
+  color: var(--text-primary);
+  transition: background 0.15s ease;
+}
+
+.scenario-dropdown:hover {
+  background: #ebeeef;
+}
+
+.scenario-prefix {
+  color: var(--text-muted);
+}
+
+.scenario-val {
+  font-weight: 600;
+}
+
+.dropdown-arrow {
+  color: var(--text-secondary);
+}
+
+/* Center Pill Nav */
+.header-center {
+  display: flex;
+  align-items: center;
+}
+
+.nav-pill-container {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: #f4f5f7;
+  padding: 3px 5px;
+  border-radius: 20px;
+}
+
+.nav-search-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: 6px 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-search-btn:hover {
+  color: var(--text-primary);
+}
+
+.nav-pill {
+  background: transparent;
+  border: none;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 5px 12px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.nav-pill:hover {
+  color: var(--text-primary);
+}
+
+.nav-pill.active {
+  background: #ffffff;
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
+
+/* Distinctive Lime Green Optimizer Pill */
+.optimizer-pill {
+  background: var(--lime-accent);
+  color: #111827;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 13px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(250, 255, 2, 0.45);
+  transition: all 0.15s ease;
+}
+
+.optimizer-pill:hover {
+  background: var(--lime-hover);
+  transform: translateY(-0.5px);
+}
+
+.nav-inline-divider {
+  width: 1px;
+  height: 16px;
+  background: #e2e5ea;
+  margin: 0 4px;
+}
+
+.nav-action-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: 5px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.nav-action-btn:hover {
+  background: #ffffff;
+  color: var(--text-primary);
+}
+
+.nav-action-btn.dark-pill {
+  background: #111827;
+  color: #ffffff;
+  border-radius: 5px;
+  padding: 4px 6px;
+  margin-left: 2px;
+}
+
+.nav-action-btn.dark-pill:hover {
+  background: #000000;
+}
+
+/* Header Right */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--lime-accent);
+  color: #000000;
+  font-size: 8.5px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #ffffff;
+}
+
+.user-avatar-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #f1f3f6;
+  border: 1px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   MASTER TWO-COLUMN COCKPIT LAYOUT
+   Left: Full-Height Live Interactive Route Map
+   Right: Stacked Freight Truck Cargo Bay (Top) + Road Freight Orders (Bottom)
+   ========================================================================== */
+
+.cockpit-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 8px minmax(0, 1fr);
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  background: #f4f5f7;
+  gap: 0;
+}
+
+/* ==========================================================================
+   DRAGGABLE COCKPIT SPLITTER RESIZER
+   ========================================================================== */
+
+.cockpit-divider-resizer {
+  position: relative;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  background: #e2e8ea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  touch-action: none;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.cockpit-divider-resizer:hover,
+.cockpit-divider-resizer.dragging {
+  background: #faff02;
+  box-shadow: 0 0 10px rgba(250, 255, 2, 0.7);
+}
+
+.resizer-handle-pill {
+  width: 4px;
+  height: 38px;
+  border-radius: 9999px;
+  background: #94a3b8;
+  transition: all 0.15s ease;
+  pointer-events: none;
+}
+
+.cockpit-divider-resizer:hover .resizer-handle-pill,
+.cockpit-divider-resizer.dragging .resizer-handle-pill {
+  background: #0f172a;
+  height: 52px;
+  transform: scaleX(1.3);
+}
+
+.cockpit-map-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.cockpit-sidebar-column {
+  display: grid;
+  grid-template-rows: minmax(0, 52%) minmax(0, 48%);
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  min-width: 0;
+  gap: 1px;
+  background: #ebeeef;
+  overflow: hidden;
+}
+
+.truck-section-wrapper,
+.orders-section-wrapper {
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Bottom Segmented Navigation for Mobile Viewports */
+.cockpit-mobile-nav {
+  display: none;
+}
+
+.mobile-nav-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 4px 8px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  transition: all 0.15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==========================================================================
+   TOP-LEFT: MAP CONTAINER & LIVE TRACKER
+   ========================================================================== */
+
+.cockpit-map-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+/* Fullscreen / Maximized Cockpit View */
+.cockpit-map-card.maximized-view {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
+  border-radius: 0 !important;
+}
+
+.cockpit-map-canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1;
+}
+
+/* Strict MapLibre GL Native Container Styles (Prevents marker coordinate drift) */
+.maplibregl-map {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden;
+}
+
+.maplibregl-canvas-container {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.maplibregl-canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.maplibregl-marker {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  will-change: transform !important;
+  pointer-events: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 5;
+}
+
+.map-top-bar {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.order-id-badge {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  padding: 6px 12px;
+  border-radius: 7px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #eef0f3;
+}
+
+.order-close-icon {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.order-close-icon:hover {
+  color: var(--text-primary);
+}
+
+.order-code {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.map-top-actions {
+  pointer-events: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.map-bottom-actions {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.map-util-btn {
+  width: 38px;
+  height: 38px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.15s ease;
+}
+
+.map-util-btn:hover {
+  color: #0f172a;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.map-util-btn.active {
+  background: #faff02;
+  color: #0f172a;
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(250, 255, 2, 0.4);
+}
+
+/* ==========================================================================
+   AUTHENTIC 3D LOCATION PIN MARKERS (Origin, D1, D2, D3)
+   Styled in signature FoxFreight yellow/lime card color (#faff02)
+   IMPORTANT: No transform on root marker to ensure 100% MapLibre coordinate lock
+   ========================================================================== */
+
+.cockpit-location-pin {
+  width: 36px;
+  height: 48px;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  display: block;
+  box-sizing: border-box;
+}
+
+.map-zoom-controls {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.map-zoom-btn {
+  width: 38px;
+  height: 38px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.15s ease;
+}
+
+.map-zoom-btn:hover {
+  color: #0f172a;
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* ==========================================================================
+   ROUTE TELEMETRY FLOATING YELLOW CARD (Exact Match to Reference Image)
+   ========================================================================== */
+
+.route-telemetry-card {
+  position: absolute;
+  top: 58px;
+  right: 14px;
+  width: 252px;
+  max-width: calc(100% - 28px);
+  background: rgba(244, 248, 171, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 10px;
+  padding: 13px 15px;
+  z-index: 10;
+  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.10), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+  animation: fadeIn 0.2s ease-out;
+  user-select: none;
+}
+
+.cockpit-viewport.dark-theme .route-telemetry-card {
+  background: rgba(244, 248, 171, 0.72);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.telemetry-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 11px;
+}
+
+.telemetry-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.telemetry-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.2px;
+}
+
+.telemetry-expand-btn {
+  background: transparent;
+  border: none;
+  color: #0f172a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  border-radius: 4px;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  opacity: 0.75;
+}
+
+.telemetry-expand-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  opacity: 1;
+}
+
+.telemetry-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.telemetry-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.telemetry-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.telemetry-distance-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.telemetry-row-compact {
+  border-bottom: none !important;
+  padding: 1px 0 !important;
+}
+
+/* Milestone Number Line */
+.milestone-number-line {
+  position: relative;
+  width: 100%;
+  padding: 4px 6px;
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 6px;
+  margin-top: 2px;
+}
+
+.number-line-labels {
+  position: relative;
+  width: 100%;
+  height: 11px;
+}
+
+.number-line-labels span {
+  position: absolute;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.number-line-labels.top span {
+  top: 0;
+  font-size: 7.5px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.number-line-labels.bottom span {
+  bottom: 0;
+  font-size: 8px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.number-line-labels.bottom span.label-active {
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.number-line-axis {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(15, 23, 42, 0.15);
+  border-radius: 2px;
+  margin: 5px 0;
+}
+
+.number-line-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #0f172a;
+  border-radius: 2px;
+  transition: width 0.15s linear;
+}
+
+.number-line-indicator {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #0f172a;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  z-index: 3;
+  transition: left 0.15s linear;
+}
+
+.number-line-tick {
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #f4f8ab;
+  border: 1.5px solid rgba(15, 23, 42, 0.5);
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+.number-line-tick.reached {
+  background: #0f172a;
+  border-color: #0f172a;
+}
+
+.telemetry-label {
+  color: #334155;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  flex-shrink: 0;
+}
+
+.telemetry-value {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #0f172a;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 145px;
+}
+
+.telemetry-mono {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.telemetry-subval {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 9.5px;
+}
+
+.telemetry-next-pill {
+  background: #0f172a;
+  color: #f4f8ab;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 9.5px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.telemetry-stops-badges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.telemetry-stop-badge {
+  font-size: 8.5px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  padding: 1.5px 5px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.telemetry-stop-badge.done {
+  background: #0f172a;
+  color: #f4f8ab;
+  border: 1px solid #0f172a;
+}
+
+.telemetry-stop-badge.active {
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid #0f172a;
+  box-shadow: 0 0 5px rgba(15, 23, 42, 0.35);
+}
+
+.telemetry-stop-badge.pending {
+  background: rgba(15, 23, 42, 0.08);
+  color: #475569;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.telemetry-arrow {
+  font-size: 7.5px;
+  color: #64748b;
+}
+
+.telemetry-restore-btn {
+  position: absolute;
+  top: 46px;
+  right: 14px;
+  background: rgba(244, 248, 171, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #0f172a;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.telemetry-restore-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+}
+
+/* ==========================================================================
+   AUTHENTIC FOXFREIGHT REFERENCE MARKERS (Matching Design Spec)
+   ========================================================================== */
+
+.cockpit-blue-leaf-pin {
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cockpit-blue-leaf-pin:hover {
+  transform: scale(1.18) translateY(-4px);
+}
+
+.cockpit-halo-checkpoint {
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cockpit-halo-checkpoint:hover {
+  transform: scale(1.15) translateY(-2px);
+}
+
+.cockpit-halo-checkpoint:hover .halo-circle {
+  transform: scale(1.08);
+  background: rgba(148, 163, 184, 0.55);
+}
+
+/* On Completion: Exact same vibrant lime-yellow look as +1 / +2 alternate depot stops */
+.cockpit-halo-checkpoint.completed .halo-circle {
+  background: #faff02 !important;
+  border: 2px solid #0f172a !important;
+  box-shadow: 0 3px 8px rgba(250, 255, 2, 0.6) !important;
+  backdrop-filter: none !important;
+}
+
+.cockpit-halo-checkpoint.completed .halo-circle div,
+.cockpit-halo-checkpoint.completed .halo-circle .halo-inner-dot {
+  background: #0f172a !important;
+  width: 5.5px !important;
+  height: 5.5px !important;
+  border-radius: 50% !important;
+}
+
+.cockpit-halo-checkpoint.completed .pin-label-text {
+  background: #faff02 !important;
+  border: 1px solid #0f172a !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12) !important;
+  font-weight: 800 !important;
+  font-size: 8px !important;
+  top: -14px !important;
+}
+
+
+
+.cockpit-location-pin {
+  width: 36px;
+  height: 48px;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.pin-anchor-wrapper {
+  position: relative;
+  width: 36px;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Realistic Ground Shadow on Asphalt */
+.pin-ground-shadow {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 22px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.45) 0%, transparent 75%);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Pin Teardrop Body */
+.pin-body {
+  position: relative;
+  width: 36px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cockpit-location-pin:hover .pin-body {
+  transform: scale(1.15) translateY(-4px);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+}
+
+.pin-svg-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Default Theme: Yellow/Lime Card Color (#faff02) */
+.pin-path-bg {
+  fill: #faff02;
+  stroke: #111827;
+  stroke-width: 2.2;
+  transition: fill 0.25s ease, stroke 0.25s ease;
+}
+
+.pin-inner-circle {
+  fill: #111827;
+  transition: fill 0.25s ease;
+}
+
+.pin-label-text {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 10px;
+  color: #faff02;
+  letter-spacing: -0.2px;
+  pointer-events: none;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+/* Origin Specialty Marker */
+.cockpit-location-pin.origin .pin-path-bg {
+  fill: #ffffff;
+  stroke: #111827;
+}
+
+.cockpit-location-pin.origin .pin-inner-circle {
+  fill: #111827;
+}
+
+.cockpit-location-pin.origin .pin-label-text {
+  color: #ffffff;
+  font-size: 8px;
+  top: 11px;
+}
+
+/* Checkpoint D1 & D2: Signature Yellow/Lime */
+.cockpit-location-pin.d1 .pin-path-bg,
+.cockpit-location-pin.d2 .pin-path-bg {
+  fill: #faff02;
+  stroke: #111827;
+}
+
+.cockpit-location-pin.d1 .pin-label-text,
+.cockpit-location-pin.d2 .pin-label-text {
+  color: #faff02;
+}
+
+/* Checkpoint D3 (Final Terminal) */
+.cockpit-location-pin.d3 .pin-path-bg {
+  fill: #faff02;
+  stroke: #111827;
+}
+
+.cockpit-location-pin.d3 .pin-inner-circle {
+  fill: #111827;
+}
+
+.cockpit-location-pin.d3 .pin-label-text {
+  color: #faff02;
+  font-weight: 900;
+}
+
+/* Completed Delivery Stop State (Rich Emerald) */
+.cockpit-location-pin.completed .pin-path-bg {
+  fill: #10b981 !important;
+  stroke: #064e3b !important;
+}
+
+.cockpit-location-pin.completed .pin-inner-circle {
+  fill: #064e3b !important;
+}
+
+.cockpit-location-pin.completed .pin-label-text {
+  color: #ffffff !important;
+}
+
+/* Checkpoint Crossing Celebration Pulse */
+.cockpit-location-pin.checkpoint-pulse-active .pin-body {
+  animation: locationPinBounce 1.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.pin-pulse-wave {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.cockpit-location-pin.checkpoint-pulse-active .pin-pulse-wave {
+  animation: locationPinGlowRing 1.3s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+@keyframes locationPinBounce {
+  0% { transform: scale(1) translateY(0); filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28)); }
+  50% { transform: scale(1.22) translateY(-6px); filter: drop-shadow(0 12px 20px rgba(250, 255, 2, 0.85)); }
+  100% { transform: scale(1) translateY(0); filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28)); }
+}
+
+@keyframes locationPinGlowRing {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 0.95;
+    border: 3px solid #faff02;
+    background: rgba(250, 255, 2, 0.45);
+    box-shadow: 0 0 12px rgba(250, 255, 2, 0.8);
+  }
+  100% {
+    width: 76px;
+    height: 76px;
+    opacity: 0;
+    border: 1px solid #faff02;
+    background: transparent;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ==========================================================================
+   DIRECTIONAL ACTIVE TRUCK MARKER
+   ========================================================================== */
+
+.cockpit-active-truck-marker {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.truck-heading-ring {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(250, 255, 2, 0.24) 0%, rgba(250, 255, 2, 0.04) 65%, transparent 100%);
+  border: 1.5px solid rgba(250, 255, 2, 0.65);
+  box-shadow: 0 0 16px rgba(250, 255, 2, 0.5);
+  animation: pulseTruckPing 2s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.truck-topview-wrapper {
+  position: relative;
+  width: 96px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  z-index: 2;
+  pointer-events: none;
+  transition: transform 0.08s linear;
+}
+
+.truck-topview-image {
+  width: 96px;
+  height: 32px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.6)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes pulseTruckPing {
+  0% { transform: scale(0.65); opacity: 0.9; }
+  70% { transform: scale(1.4); opacity: 0.1; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+
+/* Map Bottom Scrubber Bar */
+.map-bottom-bar {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  right: 14px;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eef0f3;
+  max-width: calc(100% - 28px);
+}
+
+.arrival-block {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.arrival-label {
+  font-size: 8px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.arrival-time-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.arrival-time {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.arrival-delay-pill {
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--lime-accent);
+  color: #000000;
+  padding: 1.5px 5px;
+  border-radius: 4px;
+}
+
+.timeline-scrubber-track {
+  flex: 1;
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.scrubber-ticks {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scrubber-tick {
+  width: 1px;
+  height: 7px;
+  background: #d1d5db;
+}
+
+.scrubber-tick.tick-active {
+  height: 12px;
+  background: #6b7280;
+}
+
+.scrubber-progress-line {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  background: #111827;
+  pointer-events: none;
+}
+
+.scrubber-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #111827;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transform: translate(-50%, 0);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.scrubber-handle:hover {
+  transform: translate(-50%, 0) scale(1.2);
+}
+
+.scrubber-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.scrubber-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.scrubber-btn:hover {
+  color: var(--text-primary);
+}
+
+.scrubber-dot.yellow {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #eab308;
+}
+
+/* Map Custom Markers */
+.cockpit-pin-blue {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--blue-primary);
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.5);
+}
+
+.cockpit-pin-yellow {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #eab308;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cockpit-pin-gray {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #9ca3af;
+  border: 2px solid #ffffff;
+}
+
+
+/* ==========================================================================
+   TOP-RIGHT: TRUCK LOADING & PALLET VISUALIZER
+   ========================================================================== */
+
+.truck-loading-panel {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 8px 14px;
+}
+
+.truck-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 6px;
+}
+
+.truck-panel-tabs {
+  display: flex;
+  gap: 12px;
+}
+
+.truck-tab {
+  background: none;
+  border: none;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding-bottom: 6px;
+  position: relative;
+  transition: color 0.15s ease;
+}
+
+.truck-tab:hover {
+  color: var(--text-primary);
+}
+
+.truck-tab.active {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.truck-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #111827;
+  border-radius: 1px;
+}
+
+.truck-panel-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.truck-util-btn {
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.truck-util-btn:hover {
+  background: #f3f4f6;
+  color: var(--text-primary);
+}
+
+/* Truck Stage Area */
+.truck-stage-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.truck-image-wrapper {
+  max-width: 92%;
+  max-height: 92%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.truck-cutaway-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-height: 100%;
+}
+
+.truck-zoom-controls {
+  position: absolute;
+  left: 4px;
+  top: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.truck-zoom-btn {
+  width: 22px;
+  height: 22px;
+  background: #f4f5f7;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.truck-zoom-btn:hover {
+  background: #ffffff;
+  color: var(--text-primary);
+}
+
+.truck-view-selectors {
+  position: absolute;
+  right: 4px;
+  top: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.view-selector-btn {
+  width: 24px;
+  height: 24px;
+  background: #f4f5f7;
+  border: 1px solid #e5e7eb;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.view-selector-btn:hover {
+  color: var(--text-primary);
+  background: #ffffff;
+}
+
+.view-selector-btn.active {
+  background: #ffffff;
+  border-color: #111827;
+  color: #111827;
+}
+
+.mini-truck-icon.front {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+}
+
+.truck-stage-handle {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 12px;
+  background: #f4f5f7;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+
+.handle-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #9ca3af;
+}
+
+/* VIN & Payload Bar */
+.truck-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 6px;
+}
+
+.vin-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.vin-label {
+  font-size: 8px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.vin-val {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.payload-block {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mileage-val {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.weight-group {
+  font-size: 11px;
+  font-family: var(--font-mono);
+}
+
+.weight-current {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.weight-separator {
+  color: var(--text-muted);
+  margin: 0 3px;
+}
+
+.weight-max {
+  color: var(--text-muted);
+}
+
+/* Cargo Pallet Orders Table */
+.pallet-orders-table {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+}
+
+.pallet-order-row {
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 10.5px;
+}
+
+.pallet-order-row:hover {
+  background: #f9fafb;
+}
+
+.pallet-order-row.highlight-lime {
+  background: var(--lime-highlight);
+  border: 1px solid rgba(250, 255, 2, 0.5);
+}
+
+.row-left-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 130px;
+  flex-shrink: 0;
+}
+
+.black-check-badge {
+  width: 14px;
+  height: 14px;
+  background: #111827;
+  color: #ffffff;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-check-box {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 3px;
+}
+
+.order-num-text {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.row-address-cell {
+  flex: 1;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 8px;
+}
+
+.row-pallet-cell {
+  width: 45px;
+  color: var(--text-muted);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.row-weight-cell {
+  width: 65px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.row-action-cell {
+  width: 24px;
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.row-menu-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.row-menu-btn:hover {
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   BOTTOM-LEFT: ROAD FREIGHT ORDERS
+   ========================================================================== */
+
+.freight-orders-card {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px 16px;
+  overflow: hidden;
+}
+
+.cockpit-viewport.dark-theme .freight-orders-card,
+.dark-theme .freight-orders-card,
+.dark-frame .freight-orders-card {
+  background: #0d0d0d;
+}
+
+.freight-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.freight-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cockpit-viewport.dark-theme .freight-card-title {
+  color: #ffffff;
+}
+
+.freight-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.freight-util-btn {
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.freight-util-btn:hover {
+  color: #000000;
+  background: #f3f4f6;
+}
+
+.cockpit-viewport.dark-theme .freight-util-btn:hover {
+  color: #ffffff;
+  background: #262626;
+}
+
+.freight-kpi-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.kpi-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #000000;
+}
+
+.kpi-checkbox {
+  color: #000000;
+}
+
+.kpi-count {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.kpi-metrics-group {
+  display: flex;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.freight-orders-scroll {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 0;
+  overflow-y: auto;
+}
+
+.freight-order-item {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.freight-order-item.direct-row-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.freight-order-item.direct-row-view:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.cockpit-viewport.dark-theme .freight-order-item.direct-row-view:not(.active):hover {
+  background: #2a2a2a !important;
+}
+
+.freight-order-item.card-view:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.cockpit-viewport.dark-theme .freight-order-item.card-view:not(.active):hover {
+  background: #2a2a2a !important;
+  border-color: #4a4a4a !important;
+}
+
+.item-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.item-code-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.order-check-icon {
+  color: #9ca3af;
+}
+
+.order-check-icon.checked {
+  color: #111827;
+}
+
+.order-item-code {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.item-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
+  color: var(--text-secondary);
+}
+
+.status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.status-dot.awaiting {
+  background: #9ca3af;
+}
+
+.status-dot.in-progress {
+  background: var(--green-active);
+  box-shadow: 0 0 6px rgba(22, 163, 74, 0.4);
+}
+
+.item-content-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.order-truck-thumb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 55px;
+}
+
+.mini-truck-graphic {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.truck-payload-bar {
+  width: 32px;
+  height: 3px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  margin-top: 2px;
+  overflow: hidden;
+}
+
+.payload-fill {
+  height: 100%;
+  background: var(--blue-primary);
+}
+
+.payload-text {
+  font-size: 8.5px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.order-route-flow {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.route-endpoint {
+  display: flex;
+  flex-direction: column;
+}
+
+.endpoint-name {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.endpoint-time {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.route-endpoint.dest {
+  text-align: right;
+}
+
+.route-timeline-connector {
+  flex: 1;
+  position: relative;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+}
+
+.connector-line {
+  width: 100%;
+  height: 1px;
+  background: #e2e5ea;
+  border-top: 1px dashed #d1d5db;
+}
+
+.connector-midpoint {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #111827;
+}
+
+/* ==========================================================================
+   BOTTOM-RIGHT: GANTT CHART FREIGHT SCHEDULE
+   ========================================================================== */
+
+.gantt-chart-card {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px 18px;
+  overflow: hidden;
+}
+
+.gantt-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.gantt-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gantt-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.gantt-filter-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.gantt-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gantt-date-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #f4f5f7;
+  border: 1px solid #eef0f3;
+  border-radius: 6px;
+  padding: 4px 9px;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.gantt-util-btn {
+  width: 22px;
+  height: 22px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.gantt-util-btn:hover {
+  color: var(--text-primary);
+  background: #f3f4f6;
+}
+
+/* Timeline Header */
+.gantt-timeline-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+}
+
+.timeline-code-col {
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.timeline-hours-track {
+  flex: 1;
+  position: relative;
+  height: 16px;
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.timeline-hours-track span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.current-time-marker-pill {
+  position: absolute;
+  top: -2px;
+  transform: translateX(-50%);
+  background: #111827;
+  color: #ffffff;
+  font-size: 8.5px;
+  font-weight: 800;
+  padding: 1.5px 6px;
+  border-radius: 10px;
+  z-index: 5;
+}
+
+/* Gantt Body */
+.gantt-body-container {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  overflow-y: auto;
+}
+
+.current-time-vertical-rule {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #111827;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.gantt-row {
+  display: flex;
+  align-items: center;
+  height: 22px;
+}
+
+.gantt-row-label {
+  width: 110px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.gantt-check {
+  color: #9ca3af;
+}
+
+.gantt-check.checked {
+  color: #111827;
+}
+
+.gantt-bar-track {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.gantt-offset-connector {
+  position: absolute;
+  height: 1px;
+  border-top: 1.5px dotted currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.offset-badge {
+  position: absolute;
+  top: -12px;
+  font-size: 7.5px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.gantt-bar-fill {
+  position: absolute;
+  height: 12px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+}
+
+.gantt-bar-end-time {
+  position: absolute;
+  right: 0;
+  top: -11px;
+  font-size: 7.5px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   INTERACTIVE TOAST NOTIFICATION
+   ========================================================================== */
+.cockpit-toast-notification {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  z-index: 9999;
+  animation: toastSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+.toast-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lime-accent);
+  box-shadow: 0 0 8px var(--lime-accent);
+  flex-shrink: 0;
+}
+
+.toast-text {
+  letter-spacing: 0.2px;
+}
+
+@keyframes toastSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+/* ==========================================================================
+   DARK THEME / SURVEILLANCE COCKPIT STYLING
+   Pure palette: Black / Grey / White + FoxFreight Yellow (#faff02)
+   NO dark blue, NO green, NO purple, NO glowing effects.
+   ========================================================================== */
+.cockpit-viewport.dark-theme {
+  --cockpit-bg: #000000;
+  --app-bg: #000000;
+  --card-bg: #161616;
+  --border-light: #262626;
+  --border-subtle: #333333;
+  --border-dark: #404040;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-muted: #737373;
+  background: #000000;
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .cockpit-header {
+  background: #0a0a0a;
+  border-bottom: 1px solid #262626;
+}
+
+.cockpit-viewport.dark-theme .scenario-search-trigger {
+  background: #1a1a1a !important;
+  border-color: #737373 !important;
+}
+
+.cockpit-viewport.dark-theme .scenario-search-trigger span {
+  color: #ffffff !important;
+}
+
+.cockpit-viewport.dark-theme .scenario-search-dropdown {
+  background: #141414 !important;
+  border-color: #333333 !important;
+  color: #ffffff !important;
+}
+
+.cockpit-viewport.dark-theme .scenario-search-dropdown input {
+  color: #ffffff !important;
+}
+
+.cockpit-viewport.dark-theme .scenario-dropdown {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .nav-pill-container {
+  background: #1a1a1a;
+}
+
+.cockpit-viewport.dark-theme .nav-pill {
+  color: #b3b3b3;
+}
+
+.cockpit-viewport.dark-theme .nav-pill.active {
+  background: #2e2e2e;
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .header-icon-btn {
+  color: #b3b3b3;
+}
+
+.cockpit-viewport.dark-theme .header-icon-btn:hover {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .header-truck-logo-btn {
+  background: #1a1a1a !important;
+  border-color: #333333 !important;
+  color: #ffffff !important;
+}
+
+.cockpit-viewport.dark-theme .header-truck-logo-btn span {
+  color: #ffffff !important;
+}
+
+.cockpit-viewport.dark-theme .cockpit-grid {
+  background: #000000;
+}
+
+.cockpit-viewport.dark-theme .cockpit-sidebar-column,
+.cockpit-viewport.dark-theme .cockpit-upper-row,
+.cockpit-viewport.dark-theme .cockpit-lower-row {
+  background: #1a1a1a;
+}
+
+.cockpit-viewport.dark-theme .cockpit-map-card,
+.cockpit-viewport.dark-theme .truck-loading-panel,
+.cockpit-viewport.dark-theme .freight-orders-card,
+.cockpit-viewport.dark-theme .gantt-chart-card {
+  background: #0d0d0d;
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .truck-panel-header,
+.cockpit-viewport.dark-theme .freight-card-header,
+.cockpit-viewport.dark-theme .gantt-card-header,
+.cockpit-viewport.dark-theme .freight-kpi-bar,
+.cockpit-viewport.dark-theme .gantt-timeline-header,
+.cockpit-viewport.dark-theme .truck-meta-bar,
+.cockpit-viewport.dark-theme .map-bottom-bar {
+  background: #0d0d0d;
+  border-color: #262626;
+}
+
+.cockpit-viewport.dark-theme .truck-tab {
+  color: #b3b3b3;
+}
+
+.cockpit-viewport.dark-theme .truck-tab.active {
+  color: #ffffff;
+  border-bottom-color: var(--lime-accent);
+}
+
+.cockpit-viewport.dark-theme .pallet-orders-table {
+  background: #0d0d0d;
+}
+
+.cockpit-viewport.dark-theme .pallet-order-row {
+  background: #0d0d0d;
+  border-bottom-color: #262626;
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .pallet-order-row:hover {
+  background: #1a1a1a;
+}
+
+.cockpit-viewport.dark-theme .pallet-order-row.highlight-lime {
+  background: #26261a;
+}
+
+.cockpit-viewport.dark-theme .pallet-order-row.highlight-lime .row-left-cell .order-num-text {
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .pallet-order-row.highlight-lime .row-address-cell {
+  color: #b3b3b3;
+}
+
+.cockpit-viewport.dark-theme .freight-order-item.card-view {
+  background: #141414;
+  border-color: #262626;
+}
+
+.cockpit-viewport.dark-theme .freight-order-item.card-view:hover {
+  border-color: #404040;
+}
+
+.cockpit-viewport.dark-theme .freight-order-item.card-view.active {
+  background: #1f1f1f;
+  border-color: var(--lime-accent);
+}
+
+.cockpit-viewport.dark-theme .gantt-row {
+  border-bottom-color: #1a1a1a;
+}
+
+/* Map utility buttons in dark theme */
+.cockpit-viewport.dark-theme .map-util-btn,
+.cockpit-viewport.dark-theme .map-zoom-btn {
+  background: #161616;
+  border-color: #333333;
+  color: #d4d4d4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.cockpit-viewport.dark-theme .map-util-btn:hover,
+.cockpit-viewport.dark-theme .map-zoom-btn:hover {
+  background: #222222;
+  color: #ffffff;
+  border-color: #555555;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+}
+
+.cockpit-viewport.dark-theme .map-util-btn.active {
+  background: var(--lime-accent);
+  color: #000000;
+  border-color: var(--lime-accent);
+  box-shadow: none;
+}
+
+/* Dark mode toggle active state (kept subtle — no glow) */
+.cockpit-viewport.dark-theme .map-util-btn.dark-mode-toggle {
+  background: #1a1a1a;
+  border-color: #404040;
+  color: #faff02;
+}
+
+.cockpit-viewport.dark-theme .map-util-btn.dark-mode-toggle.active {
+  background: var(--lime-accent);
+  color: #000000;
+  border-color: var(--lime-accent);
+}
+
+/* Zoom controls text/icon visibility on dark map */
+.cockpit-viewport.dark-theme .map-zoom-btn svg,
+.cockpit-viewport.dark-theme .map-util-btn svg {
+  color: inherit;
+}
+
+/* Dark scrubber / timeline bar */
+.cockpit-viewport.dark-theme .scrubber-track-area {
+  background: #161616;
+}
+
+.cockpit-viewport.dark-theme .timeline-scrubber-track {
+  background: #161616;
+}
+
+.cockpit-viewport.dark-theme .map-bottom-bar {
+  background: #161616;
+  border-color: #262626;
+}
+
+.cockpit-viewport.dark-theme .scrubber-progress-line {
+  background: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .scrubber-handle {
+  background: #ffffff;
+  border-color: #000000;
+}
+
+.cockpit-viewport.dark-theme .scrubber-tick {
+  background: #404040;
+}
+
+.cockpit-viewport.dark-theme .scrubber-tick.tick-active {
+  background: #d4d4d4;
+}
+
+.cockpit-viewport.dark-theme .arrival-time {
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .arrival-label {
+  color: #737373;
+}
+
+/* Order id badge floating on the map */
+.cockpit-viewport.dark-theme .order-id-badge {
+  background: #161616;
+  border-color: #262626;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.cockpit-viewport.dark-theme .order-code {
+  color: #ffffff;
+}
+
+/* Route telemetry floating yellow card stays yellow as the brand color */
+.cockpit-viewport.dark-theme .route-telemetry-card {
+  background: rgba(244, 248, 171, 0.9);
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.4);
+}
+
+.cockpit-viewport.dark-theme .telemetry-value {
+  color: #0f172a;
+}
+
+.cockpit-viewport.dark-theme .telemetry-mono {
+  color: #0f172a;
+}
+
+.cockpit-viewport.dark-theme .telemetry-label {
+  color: #334155;
+}
+
+/* Status dots: replace green with yellow/grey */
+.cockpit-viewport.dark-theme .status-dot.awaiting {
+  background: #737373;
+}
+
+.cockpit-viewport.dark-theme .status-dot.in-progress {
+  background: var(--lime-accent);
+  box-shadow: none;
+}
+
+/* Payload fill: replace blue with yellow in dark mode */
+.cockpit-viewport.dark-theme .payload-fill {
+  background: var(--lime-accent);
+}
+
+/* KPI checkbox in dark theme */
+.cockpit-viewport.dark-theme .kpi-checkbox {
+  color: #737373;
+}
+
+.cockpit-viewport.dark-theme .kpi-checkbox-group .kpi-checkbox {
+  color: var(--lime-accent);
+}
+
+/* Divider resizer */
+.cockpit-viewport.dark-theme .cockpit-divider-resizer {
+  background: #1a1a1a;
+}
+
+.cockpit-viewport.dark-theme .cockpit-divider-resizer:hover,
+.cockpit-viewport.dark-theme .cockpit-divider-resizer.dragging {
+  background: var(--lime-accent);
+  box-shadow: none;
+}
+
+.cockpit-viewport.dark-theme .resizer-handle-pill {
+  background: #737373;
+}
+
+.cockpit-viewport.dark-theme .cockpit-divider-resizer:hover .resizer-handle-pill,
+.cockpit-viewport.dark-theme .cockpit-divider-resizer.dragging .resizer-handle-pill {
+  background: #000000;
+}
+
+/* Webwaypoints dropdown & popups on dark map */
+.cockpit-viewport.dark-theme .cockpit-dropdown-menu {
+  background: #141414;
+  border-color: #333333;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.cockpit-viewport.dark-theme .dropdown-title {
+  color: #737373;
+}
+
+.cockpit-viewport.dark-theme .dropdown-item {
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .dropdown-item:hover {
+  background: #2e2e2e;
+}
+
+.cockpit-viewport.dark-theme .dropdown-item.active {
+  background: #2e2e2e;
+  color: #faff02;
+}
+
+/* Map DOM markers on the dark basemap: switch blue pins -> yellow/black,
+   disable all glowing animation rings, grey the halo checkpoints. */
+.cockpit-viewport.dark-theme .cockpit-blue-leaf-pin svg path {
+  fill: #faff02;
+  stroke: #000000;
+}
+
+.cockpit-viewport.dark-theme .cockpit-blue-leaf-pin svg circle {
+  fill: #000000;
+}
+
+.cockpit-viewport.dark-theme .cockpit-blue-leaf-pin svg {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+}
+
+.cockpit-viewport.dark-theme .cockpit-halo-checkpoint .halo-circle {
+  background: rgba(220, 220, 220, 0.2);
+  border-color: rgba(220, 220, 220, 0.6);
+  box-shadow: none;
+}
+
+.cockpit-viewport.dark-theme .cockpit-halo-checkpoint .halo-inner-dot {
+  background: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .cockpit-halo-checkpoint .pin-label-text {
+  background: rgba(20, 20, 20, 0.92);
+  border-color: #4a4a4a;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.cockpit-viewport.dark-theme .cockpit-halo-checkpoint.completed .halo-circle {
+  background: #faff02 !important;
+  border-color: #000000 !important;
+  box-shadow: none !important;
+}
+
+.cockpit-viewport.dark-theme .cockpit-halo-checkpoint.completed .pin-label-text {
+  background: #faff02 !important;
+  border-color: #000000 !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+}
+
+/* Remove the glowing ping rings on the dark map */
+.cockpit-viewport.dark-theme .truck-heading-ring {
+  border-color: rgba(250, 255, 2, 0.5);
+  box-shadow: none;
+  background: none;
+}
+
+.cockpit-viewport.dark-theme .cockpit-location-pin.checkpoint-pulse-active .pin-pulse-wave,
+.cockpit-viewport.dark-theme .cockpit-halo-checkpoint .pin-pulse-wave {
+  display: none;
+}
+
+.cockpit-viewport.dark-theme .route-chevron-arrow svg polygon {
+  fill: #faff02;
+}
+
+.cockpit-viewport.dark-theme .route-chevron-arrow svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7));
+}
+
+/* Active truck marker dark override (no glow) */
+.cockpit-viewport.dark-theme .cockpit-active-truck-marker .truck-heading-ring {
+  animation: none;
+  opacity: 0.8;
+}
+
+
+/* ==========================================================================
+   DROPDOWNS, POPUPS & MODALS
+   ========================================================================== */
+.cockpit-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  padding: 6px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: dropdownFade 0.15s ease-out;
+}
+
+.cockpit-viewport.dark-theme .cockpit-dropdown-menu {
+  background: #141414;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.cockpit-dropdown-menu.align-right {
+  left: auto;
+  right: 0;
+}
+
+.dropdown-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  padding: 6px 10px 4px;
+  text-align: left;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background: #f1f5f9;
+}
+
+.cockpit-viewport.dark-theme .dropdown-item {
+  color: #ffffff;
+}
+
+.cockpit-viewport.dark-theme .dropdown-item:hover {
+  background: #2e2e2e;
+}
+
+.dropdown-item.active {
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.cockpit-viewport.dark-theme .dropdown-item.active {
+  background: #2e2e2e;
+  color: #faff02;
+}
+
+.dropdown-item-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* Notification & Profile Flyouts */
+.header-flyout-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 320px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  overflow: hidden;
+  animation: dropdownFade 0.15s ease-out;
+}
+
+.cockpit-viewport.dark-theme .header-flyout-panel {
+  background: #141414;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.flyout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.flyout-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.flyout-badge {
+  background: var(--lime-accent);
+  color: #000000;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.flyout-list {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 290px;
+  overflow-y: auto;
+}
+
+.flyout-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.flyout-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.cockpit-viewport.dark-theme .flyout-item {
+  background: #0d0d0d;
+}
+
+.cockpit-viewport.dark-theme .flyout-item:hover {
+  background: #1a1a1a;
+  border-color: #3d3d3d;
+}
+
+.flyout-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.flyout-item-time {
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
+
+.flyout-item-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.flyout-item-action {
+  font-size: 10px;
+  font-weight: 600;
+  color: #2563eb;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.cockpit-viewport.dark-theme .flyout-item-action {
+  color: #faff02;
+}
+
+/* Modal Overlay & Dialog */
+/* Modal Overlay & Dialog */
+.cockpit-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  z-index: 10000;
+  animation: fadeIn 0.15s ease;
+  overflow-y: auto;
+}
+
+.cockpit-modal-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 440px;
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  animation: modalScale 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  margin: auto;
+}
+
+.cockpit-viewport.dark-theme .cockpit-modal-card {
+  background: #161616;
+  color: #ffffff;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* Compact Responsive Sizing for Settings Modal - Never takes full screen width */
+.cockpit-modal-card.settings-modal-card {
+  max-width: 380px;
+  width: min(380px, calc(100vw - 32px));
+}
+
+.cockpit-modal-card.split-modal-card {
+  max-width: 460px;
+  width: min(460px, calc(100vw - 32px));
+}
+
+.modal-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.modal-header h3 {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.modal-close-btn:hover {
+  background: #f1f5f9;
+  color: var(--text-primary);
+}
+
+.cockpit-viewport.dark-theme .modal-close-btn:hover {
+  background: #2e2e2e;
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.modal-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-setting-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.setting-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.setting-desc {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+.modal-setting-control {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.modal-footer {
+  padding: 12px 18px;
+  background: #f8fafc;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cockpit-viewport.dark-theme .modal-footer {
+  background: #0d0d0d;
+  border-color: #262626;
+}
+
+.modal-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.modal-btn.primary {
+  background: #111827;
+  color: #ffffff;
+}
+
+.modal-btn.primary:hover {
+  background: #000000;
+}
+
+.cockpit-viewport.dark-theme .modal-btn.primary {
+  background: var(--lime-accent);
+  color: #000000;
+}
+
+.modal-btn.secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.modal-btn.secondary:hover {
+  background: #f1f5f9;
+}
+
+.cockpit-viewport.dark-theme .modal-btn.secondary {
+  border-color: #404040;
+  color: #d4d4d4;
+}
+
+.cockpit-viewport.dark-theme .modal-btn.secondary:hover {
+  background: #1a1a1a;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   Desktop: Split Dual-Column Cockpit
+   Tablet (< 1024px): Scaled Cockpit Controls & Adapted Spacing
+   Mobile (< 768px): Dedicated Single-Panel View + Bottom Segmented Tab Switcher
+   Small Phone (< 480px): Compact Touch Targets & Safe Padding
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .cockpit-header {
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .nav-pill-container {
+    padding: 2px 4px;
+    gap: 2px;
+  }
+
+  .nav-pill {
+    padding: 4px 8px;
+    font-size: 10.5px;
+  }
+
+  .optimizer-pill {
+    padding: 4px 10px;
+    font-size: 10.5px;
+  }
+
+  .scenario-dropdown {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .route-telemetry-card {
+    max-width: 230px;
+    top: 50px;
+    right: 10px;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Prevent horizontal scrollbars on entire page */
+  html, body, .cockpit-viewport, .cockpit-app-frame {
+    overflow: hidden !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+
+  /* Header compacting */
+  .cockpit-header {
+    height: 50px;
+    padding: 0 10px;
+  }
+
+  .scenario-prefix {
+    display: none;
+  }
+
+  .header-divider {
+    display: none;
+  }
+
+  /* Switch grid to single panel flex column */
+  .cockpit-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
+    width: 100% !important;
+    height: calc(100dvh - 50px - 54px) !important;
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+  }
+
+  /* Hide Desktop Draggable Splitter */
+  .cockpit-divider-resizer {
+    display: none !important;
+  }
+
+  /* Show Bottom Mobile Navigation Bar */
+  .cockpit-mobile-nav {
+    display: flex !important;
+    position: relative !important;
+    height: 54px !important;
+    width: 100% !important;
+    flex-shrink: 0 !important;
+    z-index: 50 !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05) !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  }
+
+  /* Column Visibility Switcher */
+  .cockpit-map-column.mobile-hidden,
+  .cockpit-sidebar-column.mobile-hidden {
+    display: none !important;
+  }
+
+  .cockpit-map-column.mobile-active {
+    display: flex !important;
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1 1 100% !important;
+    min-height: 0 !important;
+  }
+
+  .cockpit-sidebar-column.mobile-active {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-rows: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1 1 100% !important;
+    min-height: 0 !important;
+    gap: 0 !important;
+    background: transparent !important;
+  }
+
+  .mobile-hide-section {
+    display: none !important;
+  }
+
+  .truck-section-wrapper:not(.mobile-hide-section),
+  .orders-section-wrapper:not(.mobile-hide-section) {
+    display: flex !important;
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1 1 100% !important;
+    min-height: 0 !important;
+  }
+
+  /* Map Floating Telemetry Card in Mobile */
+  .route-telemetry-card {
+    top: 50px !important;
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    max-width: calc(100vw - 16px) !important;
+    padding: 10px 12px !important;
+  }
+
+  .map-top-bar {
+    top: 8px !important;
+    left: 8px !important;
+    right: 8px !important;
+  }
+
+  .order-id-badge {
+    padding: 4px 8px !important;
+  }
+
+  .order-code {
+    font-size: 13px !important;
+  }
+
+  .map-zoom-controls {
+    left: 8px !important;
+    gap: 4px !important;
+  }
+
+  .map-zoom-btn {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .map-bottom-actions {
+    bottom: 10px !important;
+    right: 10px !important;
+    gap: 6px !important;
+  }
+
+  .map-util-btn {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  /* Responsive Logo & Brand Typography */
+  .cockpit-brand-logo {
+    height: 32px !important;
+  }
+
+  .cockpit-brand-text {
+    font-size: 17px !important;
+  }
+
+  .cockpit-logo-badge {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .freight-card-title {
+    font-size: 12px !important;
+  }
+
+  .order-item-code {
+    font-size: 13.5px !important;
+  }
+
+  .kpi-count,
+  .kpi-metrics-group {
+    font-size: 9.5px !important;
+  }
+
+  .telemetry-title {
+    font-size: 12px !important;
+  }
+
+  .telemetry-label,
+  .telemetry-value {
+    font-size: 10.5px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .cockpit-header {
+    height: 48px !important;
+    padding: 0 8px !important;
+  }
+
+  .cockpit-brand-logo {
+    height: 26px !important;
+  }
+
+  .cockpit-brand-text {
+    font-size: 15px !important;
+  }
+
+  .cockpit-logo-badge {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .order-item-code {
+    font-size: 12.5px !important;
+  }
+
+  .freight-card-title {
+    font-size: 11.5px !important;
+  }
+
+  .cockpit-grid {
+    height: calc(100dvh - 48px - 52px) !important;
+  }
+
+  .cockpit-mobile-nav {
+    height: 52px !important;
+  }
+
+  .mobile-nav-tab {
+    font-size: 10px !important;
+    gap: 2px !important;
+    padding: 4px 2px 6px 2px !important;
+  }
+
+  .cockpit-modal-backdrop {
+    padding: 12px;
+  }
+
+  .cockpit-modal-card.settings-modal-card {
+    max-width: calc(100vw - 24px);
+    width: 100%;
+  }
+
+  .modal-header {
+    padding: 12px 14px;
+  }
+
+  .modal-body {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .modal-footer {
+    padding: 10px 14px;
+  }
+
+  .modal-setting-row {
+    gap: 10px;
+  }
+
+  .setting-title {
+    font-size: 11.5px;
+  }
+
+  .setting-desc {
+    font-size: 10px;
+  }
+
+  .modal-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   LARGE & WIDESCREEN DISPLAY SCALING (1280px, 1600px, 1800px+ 2K/4K)
+   Ensures fonts, icons, telemetry cards, and controls scale up prominently
+   ========================================================================== */
+
+@media (min-width: 1280px) {
+  .cockpit-header {
+    height: 56px;
+    padding: 0 20px;
+  }
+
+  .cockpit-brand-logo {
+    height: 52px !important;
+  }
+
+  .cockpit-brand-text {
+    font-size: 24px !important;
+  }
+
+  .scenario-dropdown {
+    font-size: 12.5px;
+    padding: 6px 12px;
+  }
+
+  .nav-pill {
+    font-size: 12.5px;
+    padding: 6px 14px;
+  }
+
+  .optimizer-pill {
+    font-size: 12.5px;
+    padding: 6px 15px;
+  }
+
+  .route-telemetry-card {
+    width: 275px;
+    padding: 14px 17px;
+    top: 64px;
+    right: 18px;
+  }
+
+  .telemetry-title {
+    font-size: 14.5px;
+  }
+
+  .telemetry-label {
+    font-size: 12.5px;
+  }
+
+  .telemetry-value {
+    font-size: 13.5px;
+  }
+
+  .number-line-labels.top span {
+    font-size: 8.5px;
+  }
+
+  .number-line-labels.bottom span {
+    font-size: 9.5px;
+  }
+
+  .freight-card-title {
+    font-size: 15px;
+  }
+
+  .map-util-btn,
+  .map-zoom-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .cockpit-header {
+    height: 60px;
+    padding: 0 24px;
+  }
+
+  .cockpit-brand-logo {
+    height: 56px !important;
+  }
+
+  .cockpit-brand-text {
+    font-size: 26px !important;
+  }
+
+  .scenario-dropdown {
+    font-size: 13.5px;
+    padding: 7px 14px;
+  }
+
+  .nav-pill {
+    font-size: 13.5px;
+    padding: 7px 16px;
+  }
+
+  .optimizer-pill {
+    font-size: 13.5px;
+    padding: 7px 18px;
+  }
+
+  .route-telemetry-card {
+    width: 300px;
+    padding: 16px 20px;
+    top: 70px;
+    right: 22px;
+  }
+
+  .telemetry-title {
+    font-size: 16px;
+  }
+
+  .telemetry-label {
+    font-size: 13.5px;
+  }
+
+  .telemetry-value {
+    font-size: 14.5px;
+  }
+
+  .number-line-labels.top span {
+    font-size: 9.5px;
+  }
+
+  .number-line-labels.bottom span {
+    font-size: 10.5px;
+  }
+
+  .freight-card-title {
+    font-size: 16.5px;
+  }
+
+  .map-util-btn,
+  .map-zoom-btn {
+    width: 44px;
+    height: 44px;
+  }
 }
