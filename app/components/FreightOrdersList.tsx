@@ -484,11 +484,11 @@ export default function FreightOrdersList({
                   }}
                 >
                   {order.status === "Completed" ? (
-                    <CheckCircle2 size={22} strokeWidth={2.4} color={isDarkMode ? (isSelected ? "#ffffff" : "#9e9e9e") : "#000000"} />
+                    <CheckCircle2 size={15} strokeWidth={2.2} color={isDarkMode ? (isSelected ? "#ffffff" : "#9e9e9e") : "#000000"} />
                   ) : order.status === "Awaiting" ? (
-                    <Clock size={22} strokeWidth={2.4} color={isDarkMode ? (isSelected ? "#ffffff" : "#9e9e9e") : "#000000"} />
+                    <Clock size={15} strokeWidth={2.2} color={isDarkMode ? (isSelected ? "#ffffff" : "#9e9e9e") : "#000000"} />
                   ) : (
-                    <Activity size={22} strokeWidth={2.4} color={isDarkMode ? (isSelected ? "#faff02" : "#9e9e9e") : "#000000"} />
+                    <Activity size={15} strokeWidth={2.2} color={isDarkMode ? (isSelected ? "#faff02" : "#9e9e9e") : "#000000"} />
                   )}
                 </div>
               </div>
